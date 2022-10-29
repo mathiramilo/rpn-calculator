@@ -418,7 +418,11 @@ division:
   mov BX, [STACK + SI]
   sub SI, 2
   mov AX, [STACK +SI]
+  cmp AX, 0
+  jl negDividendDiv
   mov DX, 0
+  negDividendDiv:
+    mov DX, 0xFFFF
   idiv BX
   add SI, 2
   mov word ptr [STACK +SI], 0
@@ -455,7 +459,11 @@ mod:
   mov BX, [STACK + SI]
   sub SI, 2
   mov AX, [STACK + SI]
+  cmp AX, 0
+  jl negDividendMod
   mov DX, 0
+  negDividendMod:
+    mov DX, 0xFFFF
   idiv BX
   add SI, 2
   mov word ptr [STACK + SI], 0
@@ -563,10 +571,15 @@ shiftLeft:
   cmp CX, 2
   jl shiftLeftElse1
   mov DX, CX
-  mov CL, [STACK + SI]
+  mov CX, [STACK + SI]
   sub SI, 2
   mov AX, [STACK + SI]
+  ; If CH is greater that zero shifting to the left so many spaces will result as a 000...
+  cmp CH, 0
+  jg bigSal
   sal AX, CL
+  bigSal:
+	mov AX, 0
   add SI, 2
   mov CX, DX
   mov word ptr [STACK + SI], 0
@@ -604,8 +617,12 @@ shiftRight:
   mov DX, CX
   mov CL, [STACK + SI]
   sub SI, 2
-  mov AX, [STACK + SI]
-  sar AX, CL
+  ; If CH is greater that zero shifting to the left so many spaces will result as a 000...
+  cmp CH, 0
+  jg bigSar
+  sal AX, CL
+  bigSar:
+	mov AX, 0
   add SI, 2
   mov CX, DX
   mov word ptr [STACK + SI], 0

@@ -6,7 +6,7 @@ Assembly 8086 RPN Calculator, RPN stands for Reverse Polish Notation. Learn more
 
 To carry out this task, the problem was modeled in a high-level programming language C, this "pseudocode" serve as a guide. Finally, the program was implemented in Assembler 8086 "manually compiled" from the C model.
 
-See the oficial documentation [here](https://drive.google.com/file/d/1ylendosX9Bx8Kyw6MezueZzrbqj37PNQ/view).
+See the official documentation [here](https://drive.google.com/file/d/1ylendosX9Bx8Kyw6MezueZzrbqj37PNQ/view).
 
 ## Features
 

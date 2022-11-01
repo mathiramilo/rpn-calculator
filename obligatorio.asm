@@ -146,10 +146,8 @@ top:
     jmp main
 
 dump:
-  ; If the stack isn't empty, send all elements to the output port,
+  ; Send all elements to the output port,
   ; send code 16 and jump to main
-  cmp CX, 0
-  jle dumpElse
   mov DI, SI
   dumpFor:
     cmp DI, 0
@@ -164,12 +162,6 @@ dump:
   mov DX, [PORT_LOG]
   out DX, AX
   jmp main
-  ; If the stack is empty, send code 8 and jump to main
-  dumpElse:
-    mov AX, 8
-    mov DX, [PORT_LOG]
-    out DX, AX
-    jmp main
 
 duplicate:
   ; If the stack isn't full, duplicate the top of the stack,
@@ -177,7 +169,7 @@ duplicate:
   cmp CX, 31
   jge dupFullStack
   cmp CX, 0
-  jge dupEmptyStack
+  jle dupEmptyStack
   mov DX, [STACK + SI]
   add SI, 2
   mov [STACK + SI], DX
@@ -692,7 +684,7 @@ halt:
   jmp loopInf
 
 .ports
-300:
+300: 
 
 .interrupts ; Interruptions handler
 ; Interruption example: timer

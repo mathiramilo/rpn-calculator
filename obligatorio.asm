@@ -175,7 +175,9 @@ duplicate:
   ; If the stack isn't full, duplicate the top of the stack,
   ; increase CX, send code 16 and jump to main
   cmp CX, 31
-  jge dupElse
+  jge dupFullStack
+  cmp CX, 0
+  jge dupEmptyStack
   mov DX, [STACK + SI]
   add SI, 2
   mov [STACK + SI], DX
@@ -185,11 +187,17 @@ duplicate:
   out DX, AX
   jmp main
   ; If the stack is full, send code 4 and jump to main
-  dupElse:
+  dupFullStack:
     mov AX, 4
     mov DX, [PORT_LOG]
     out DX, AX
     jmp main
+  ; If the stack is empty, send code 8 and jump to main
+  dupEmptyStack:
+	mov AX, 8
+	mov DX, [PORT_LOG]
+	out DX, AX
+	jmp main
 
 swap:
   ; If the stack has at least 2 elements, swap the top two elements,
@@ -421,8 +429,10 @@ division:
   cmp AX, 0
   jl negDividendDiv
   mov DX, 0
+  jmp makeDiv
   negDividendDiv:
-    mov DX, 0xFFFF
+  mov DX, 0xFFFF
+  makeDiv:
   idiv BX
   add SI, 2
   mov word ptr [STACK +SI], 0
@@ -462,8 +472,10 @@ mod:
   cmp AX, 0
   jl negDividendMod
   mov DX, 0
+  jmp makeMod
   negDividendMod:
-    mov DX, 0xFFFF
+  mov DX, 0xFFFF
+  makeMod:
   idiv BX
   add SI, 2
   mov word ptr [STACK + SI], 0
@@ -578,8 +590,10 @@ shiftLeft:
   cmp CH, 0
   jg bigSal
   sal AX, CL
+  jmp salDone
   bigSal:
 	mov AX, 0
+  salDone:
   add SI, 2
   mov CX, DX
   mov word ptr [STACK + SI], 0
@@ -615,14 +629,17 @@ shiftRight:
   cmp CX, 2
   jl shiftRightElse1
   mov DX, CX
-  mov CL, [STACK + SI]
+  mov CX, [STACK + SI]
   sub SI, 2
+  mov AX, [STACK + SI]
   ; If CH is greater that zero shifting to the left so many spaces will result as a 000...
   cmp CH, 0
   jg bigSar
-  sal AX, CL
+  sar AX, CL
+  jmp sarDone
   bigSar:
 	mov AX, 0
+  sarDone:
   add SI, 2
   mov CX, DX
   mov word ptr [STACK + SI], 0
@@ -675,7 +692,7 @@ halt:
   jmp loopInf
 
 .ports
-300: 1,5,1,-10,1,4,14,5,255
+300:
 
 .interrupts ; Interruptions handler
 ; Interruption example: timer

@@ -1,6 +1,6 @@
-#define PORT_LOG_DEFAULT 8;
-#define PORT_OUTPUT_DEFAULT 10;
-#define PORT_INPUT 12;
+#define PORT_LOG_DEFAULT 100;
+#define PORT_OUTPUT_DEFAULT 200;
+#define PORT_INPUT 300;
 
 // Representation of a stack
 short stack[31];

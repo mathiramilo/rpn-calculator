@@ -584,7 +584,8 @@ shiftLeft:
   sal AX, CL
   jmp salDone
   bigSal:
-	mov AX, 0
+  mov CL, 32
+  sal AX, CL
   salDone:
   add SI, 2
   mov CX, DX
@@ -630,7 +631,8 @@ shiftRight:
   sar AX, CL
   jmp sarDone
   bigSar:
-	mov AX, 0
+  mov CL, 32
+  sar AX, CL
   sarDone:
   add SI, 2
   mov CX, DX
@@ -684,7 +686,7 @@ halt:
   jmp loopInf
 
 .ports
-300: 
+300:
 
 .interrupts ; Interruptions handler
 ; Interruption example: timer
